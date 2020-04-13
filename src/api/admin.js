@@ -15,3 +15,17 @@ export function listAllAddPermissionsById(id) {
     params: {id}
   })
 }
+
+export function listAllWebLogs() {
+  return request({
+    url: '/admin/WebLog/listAllWebLogs',
+    method: 'get'
+  })
+}
+
+export function deleteAllWebLogs() {
+  return request({
+    url: '/admin/WebLog/deleteAllWebLogs',
+    method: 'get'
+  })
+}
