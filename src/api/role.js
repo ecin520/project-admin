@@ -41,3 +41,19 @@ export function deleteByRoleId(id) {
     params: {id}
   })
 }
+
+export function insertRolePermission(rolePermission) {
+  return request({
+    url: '/admin/RolePermission/insertRolePermission',
+    method: 'post',
+    data: rolePermission
+  })
+}
+
+export function deleteByRolePermission(rolePermission) {
+  return request({
+    url: '/admin/RolePermission/deleteByRolePermission',
+    method: 'post',
+    data: rolePermission
+  })
+}

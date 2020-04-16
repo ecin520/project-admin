@@ -25,10 +25,18 @@
           ></el-input>
         </el-col>
         <el-col :span="12">
-          <img onclick="this.src = '/api/common/createImageCode?d='+new Date()*1" src="/api/common/createImageCode" class="login-item check-code" />
+          <img
+            @click="refresh"
+            :src="codeUrl"
+            class="login-item check-code"
+          />
         </el-col>
       </span>
-      <el-button class="login-item" type="primary" @click="loginClick"
+      <el-button
+        v-loading="loading"
+        class="login-item"
+        type="primary"
+        @click="loginClick"
         >登录</el-button
       >
     </el-card>
@@ -37,20 +45,28 @@
 
 <script>
 import { login, register } from "@/api/basic";
-import {createImageCode} from "@/api/common"
+import { createImageCode } from "@/api/common";
 export default {
   data() {
     return {
       imageUrl: "http://106.15.200.82/source/1585296275841.jpg",
       username: "",
       password: "",
-      code: ""
+      code: "",
+      codeUrl: '',
+      loading: false
     };
   },
   methods: {
+    refresh() {
+      this.codeUrl = '/api/common/createImageCode?d='+new Date()*1
+    },
     loginClick() {
+      this.loading = true;
+
       if (this.username === "" || this.password === "") {
         this.$message({ message: "请输入正确格式", type: "error" });
+        this.loading = false;
         return;
       }
 
@@ -62,15 +78,29 @@ export default {
               token: response.message,
               userInfo: response.user
             });
+            this.loading = false;
             this.$router.push({ path: "/" });
           }
         })
         .catch(error => {
+          this.refresh();
+          this.loading = false;
           console.log(error);
         });
+
     }
   },
-  mounted() {
+  created() {
+
+    let that = this;
+    document.onkeydown = e => {
+      let key = window.event.keyCode;
+      if (key === 13) {
+        that.loginClick();
+      }
+    };
+
+    this.refresh()
 
   }
 };
@@ -123,6 +153,8 @@ export default {
     .check-code {
       float: right;
       width: 120px;
+      border: 1.5px solid #1fc8db;
+      border-radius: 4px;
     }
 
     .check-code:hover {

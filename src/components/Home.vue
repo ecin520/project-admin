@@ -29,9 +29,13 @@
               <i class="el-icon-pie-chart"></i>
               访问日志
             </el-menu-item>
-            <el-menu-item index="3-2" @click="interfaceCall">
+            <el-menu-item index="3-2" @click="errorLog">
+              <i class="el-icon-pie-chart"></i>
+              异常日志
+            </el-menu-item>
+            <el-menu-item index="3-3" @click="dataMonitor">
               <i class="el-icon-c-scale-to-original"></i>
-              接口调用
+              数据监控
             </el-menu-item>
           </el-submenu>
           <el-submenu index="4">
@@ -134,9 +138,13 @@ export default {
       this.breadcrumb = ['系统监控', '访问日志']
       this.$router.push({path: '/access-log'})
     },
-    interfaceCall() {
-      this.breadcrumb = ['系统监控', '接口调用']
-      this.$router.push({path: '/interface-call'})
+    errorLog() {
+      this.breadcrumb = ['系统监控', '异常日志']
+      this.$router.push({path: '/error-log'})
+    },
+    dataMonitor() {
+      this.breadcrumb = ['系统监控', '数据监控']
+      this.$router.push({path: '/data-monitor'})
     },
     documentApiPage() {
       this.breadcrumb = ['工具', 'Api文档']

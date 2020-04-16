@@ -168,8 +168,6 @@
             v-model="userRoles"
             multiple
             placeholder="选择角色"
-            @change="changeUserRole"
-            @remove-tag="removeUserRoleTag"
           >
             <el-option
               v-for="item in allRoles"
@@ -252,7 +250,11 @@ import {
   updateByUserId,
   insertUser,
   countUser,
-  deleteByUserId
+  deleteByUserId,
+  deleteByUserRole,
+  insertUserRole,
+  insertUserAddPermission,
+  deleteByUserAddPermission
 } from "@/api/user";
 import { listAllAddPermissionsById, listAllRolesById } from "@/api/admin";
 import { listAllRoles } from "@/api/role";
@@ -267,12 +269,13 @@ export default {
       insertUser: {},
       userRoles: [],
       userRolesBack: [],
-      submitUserRoles: [],
       userAddPermissions: [],
       userAddPermissionsBack: [],
       selectedUsers: [],
       allRoles: [],
       allUserAddPermissions: [],
+      roleMap: null,
+      addPermissionMap: null,
       loading: true,
       userDetailDialog: false,
       deleteDialog: false,
@@ -301,8 +304,11 @@ export default {
 
       listAllRoles().then(response => {
         this.allRoles = response.content;
+        this.roleMap = new Map();
+        for (let i = 0; i < this.allRoles.length; i++) {
+          this.roleMap.set(this.allRoles[i].name, this.allRoles[i].id);
+        }
       });
-
       listAllAddPermissionsById(this.userDetail.id).then(response => {
         this.userAddPermissions = [];
         let content = response.content;
@@ -314,6 +320,13 @@ export default {
 
       listAllAddPermissions().then(response => {
         this.allUserAddPermissions = response.content;
+        this.addPermissionMap = new Map();
+        for (let i = 0; i < this.allUserAddPermissions.length; i++) {
+          this.addPermissionMap.set(
+            this.allUserAddPermissions[i].name,
+            this.allUserAddPermissions[i].id
+          );
+        }
       });
 
       this.userDetailDialog = true;
@@ -325,6 +338,10 @@ export default {
       });
     },
     deleteBatchUserClick() {
+      if (this.selectedUsers.length === 0) {
+        this.$message({ type: "warning", message: "请选择删除项" });
+        return;
+      }
       this.$confirm("此操作将永久删除用户, 是否继续?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -344,41 +361,117 @@ export default {
     modifyUserClick() {
       let that = this;
       let flag = false;
-      if (JSON.stringify(this.userDetail) !== JSON.stringify(this.userDetailBack)) {
+      if (
+        JSON.stringify(this.userDetail) !== JSON.stringify(this.userDetailBack)
+      ) {
         console.log(this.userDetail);
         updateByUserId(this.userDetail).then(response => {
-          this.$message({ message: response.message, type: "success" });
+          console.log(response);
           that.userDetailDialog = false;
           that.init();
         });
         flag = true;
       }
       if (JSON.stringify(this.userRoles) !== this.userRolesBack) {
-        let temp = {...this.userRolesBack}
-        for (let i = 0; i < this.userRoles.length; i++) {
-          
+        let temp = JSON.parse(this.userRolesBack);
+        let add = [];
+        let sub = [];
+        for (let i of temp) {
+          let sign = false;
+          for (let j of this.userRoles) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            sub.push(i);
+          }
         }
-        // let postItems = []
-        // for (let i = 0; i < this.userRoles.length; i++) {
-        //   for (let j = 0; j < this.allRoles.length; j++) {
-        //     if (this.userRoles[i] === this.allRoles[j].name) {
-        //       postItems.push({id: this.allRoles[i].id})
-        //       postItems.push({name: this.allRoles[i].name})
-        //       break
-        //     }
-        //   }
-        // }
-        // this.$message({ message: this.userDetail.id, type: "success" });
-        // this.$message({ message: postItems, type: "success" });
+
+        for (let i of this.userRoles) {
+          let sign = false;
+          for (let j of temp) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            add.push(i);
+          }
+        }
+        add.forEach(element => {
+          insertUserRole({
+            userId: this.userDetail.id,
+            roleId: this.roleMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
+        sub.forEach(element => {
+          deleteByUserRole({
+            userId: this.userDetail.id,
+            roleId: this.roleMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
         flag = true;
       }
       if (JSON.stringify(this.userAddPermissions) !== this.userAddPermissionsBack) {
-        this.$message({ message: "附加权限已经修改", type: "success" });
+        let temp = JSON.parse(this.userAddPermissionsBack);
+        let add = [];
+        let sub = [];
+        for (let i of temp) {
+          let sign = false;
+          for (let j of this.userAddPermissions) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            sub.push(i);
+          }
+        }
+
+        for (let i of this.userAddPermissions) {
+          let sign = false;
+          for (let j of temp) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            add.push(i);
+          }
+        }
+        add.forEach(element => {
+          insertUserAddPermission({
+            userId: this.userDetail.id,
+            additionalPermissionId: this.addPermissionMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
+        sub.forEach(element => {
+          deleteByUserAddPermission({
+            userId: this.userDetail.id,
+            additionalPermissionId: this.addPermissionMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
         flag = true;
       }
       if (!flag) {
         this.$message({ message: "信息无改动", type: "warning" });
+        return;
       }
+      this.$message({ message: "信息修改成功", type: "success" });
+      this.userDetailDialog = false;
     },
     userDetailDialogCancle() {
       this.userDetailDialog = false;
@@ -394,12 +487,6 @@ export default {
     currentChange(index) {
       this.currentPage = index;
       this.init();
-    },
-    // changeUserRole(value) {
-    //   alert(value)
-    // },
-    removeUserRoleTag(value) {
-      alert(value)
     },
     init() {
       this.loading = true;

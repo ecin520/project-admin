@@ -92,6 +92,22 @@
         <el-form-item label="创建时间">
           <el-input v-model="roleDetail.createTime" :disabled="true"></el-input>
         </el-form-item>
+        <el-form-item label="权限">
+          <el-select
+            style="width: 485px"
+            v-model="rolePermissions"
+            multiple
+            placeholder="选择角色"
+          >
+            <el-option
+              v-for="item in allPermissions"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button
@@ -141,12 +157,20 @@ import {
   countRole,
   deleteByRoleId
 } from "@/api/role";
+import { listRolePermissions } from "@/api/admin";
+import { listAllPermissions } from "@/api/permission";
+import { deleteByRolePermission, insertRolePermission } from "@/api/role";
 export default {
   data() {
     return {
       roleData: [],
       roleDetail: {},
+      roleDetailBack: {},
       insertRole: {},
+      rolePermissions: [],
+      rolePermissionsBack: [],
+      permissionMap: null,
+      allPermissions: [],
       loading: true,
       addRoleDialog: false,
       roleDetailDialog: false,
@@ -158,6 +182,23 @@ export default {
   methods: {
     editClick(index, row) {
       this.roleDetail = { ...row };
+      this.roleDetailBack = { ...row };
+      listRolePermissions(row.id).then(response => {
+        this.rolePermissions = [];
+        response.content.forEach(element => {
+          this.rolePermissions.push(element.name);
+        });
+        this.rolePermissionsBack = JSON.stringify(this.rolePermissions);
+      });
+
+      listAllPermissions().then(response => {
+        this.allPermissions = response.content;
+        this.permissionMap = new Map();
+        this.allPermissions.forEach(element => {
+          this.permissionMap.set(element.name, element.id);
+        });
+      });
+
       this.roleDetailDialog = true;
     },
     deleteClick(index, row) {
@@ -178,11 +219,71 @@ export default {
       });
     },
     modifyRoleClick() {
-      updateByUserId(this.roleDetail).then(response => {
-        this.$message({ message: response.message, type: "success" });
-        this.roleDetailDialog = false;
-        this.init();
-      });
+
+      let flag = false;
+
+      if (JSON.stringify(this.roleDetail) !== JSON.stringify(this.roleDetailBack)) {
+        updateByUserId(this.roleDetail).then(response => {
+          this.$message({ message: response.message, type: "success" });
+          this.roleDetailDialog = false;
+          this.init();
+        });
+        flag = true;
+      }
+
+      if (JSON.stringify(this.rolePermissions) !== this.rolePermissionsBack) {
+        let temp = JSON.parse(this.rolePermissionsBack);
+        let add = [];
+        let sub = [];
+        for (let i of temp) {
+          let sign = false;
+          for (let j of this.rolePermissions) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            sub.push(i);
+          }
+        }
+
+        for (let i of this.rolePermissions) {
+          let sign = false;
+          for (let j of temp) {
+            if (i === j) {
+              sign = true;
+              break;
+            }
+          }
+          if (sign === false) {
+            add.push(i);
+          }
+        }
+        add.forEach(element => {
+          insertRolePermission({
+            roleId: this.roleDetail.id,
+            permissionId: this.permissionMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
+        sub.forEach(element => {
+          deleteByRolePermission({
+            roleId: this.roleDetail.id,
+            permissionId: this.permissionMap.get(element)
+          }).then(response => {
+            console.log(response);
+          });
+        });
+        flag = true;
+      }
+      if (!flag) {
+        this.$message({ message: "信息无改动", type: "warning" });
+        return;
+      }
+      this.$message({ message: "信息修改成功", type: "success" });
+      this.roleDetailDialog = false;
     },
     currentChange(index) {
       this.currentPage = index;

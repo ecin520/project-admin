@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import layout from './modules/layout'
-import {getToken, setToken, clearToken} from '../utils/auth'
+import {getToken, setToken, clearToken, clearSessionId} from '../utils/auth'
 import {getUserInfo, setUserInfo, clearUserInfo} from '../utils/user'
 
 Vue.use(Vuex)
@@ -43,7 +43,6 @@ const store = new Vuex.Store({
         login (ctx, {token, userInfo}) {
             ctx.commit('setToken', token)
             ctx.commit('setUserInfo', userInfo)
-            
         },
         logout (ctx) {
             ctx.commit('setAuth', false)

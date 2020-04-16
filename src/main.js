@@ -7,12 +7,15 @@ import 'element-ui/lib/theme-chalk/index.css';
 import store from './store'
 import VCharts from 'v-charts'
 import JsonViewer from 'vue-json-viewer'
+import VueHighlightJS from 'vue-highlightjs'
+import 'highlight.js/styles/atom-one-dark.css'
 
 const VueRouterPush = Router.prototype.push 
 Router.prototype.push = function push (to) {
     return VueRouterPush.call(this, to).catch(err => err)
 }
 
+Vue.use(VueHighlightJS)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VCharts)

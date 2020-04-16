@@ -58,9 +58,14 @@ const router = new Router({
           component: () => import('../components/page/monitor/AccessLog')
         },
         {
-          path: '/interface-call',
-          name: 'InterfaceCall',
-          component: () => import('../components/page/monitor/InterfaceCall')
+          path: '/error-log',
+          name: 'ErrorLog',
+          component: () => import('../components/page/monitor/ErrorLog')
+        },
+        {
+          path: '/data-monitor',
+          name: 'DataMonitor',
+          component: () => import('../components/page/monitor/DataMonitor')
         },
         {
           path: '/personal',

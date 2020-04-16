@@ -16,6 +16,14 @@ export function listAllAddPermissionsById(id) {
   })
 }
 
+export function listRolePermissions(id) {
+  return request({
+    url: '/admin/listRolePermissions',
+    method: 'post',
+    params: {id}
+  })
+}
+
 export function listAllWebLogs() {
   return request({
     url: '/admin/WebLog/listAllWebLogs',
@@ -29,3 +37,19 @@ export function deleteAllWebLogs() {
     method: 'get'
   })
 }
+
+export function listAllErrorLogs() {
+  return request({
+    url: '/admin/WebLog/listAllErrorLogs',
+    method: 'get'
+  })
+}
+
+export function deleteAllErrorLogs() {
+  return request({
+    url: '/admin/WebLog/deleteAllErrorLogs',
+    method: 'get'
+  })
+}
+
+

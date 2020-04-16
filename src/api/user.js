@@ -42,3 +42,34 @@ export function deleteByUserId(id) {
   })
 }
 
+export function insertUserRole(userRole) {
+  return request({
+    url: '/admin/UserRole/insertUserRole',
+    method: 'post',
+    data: userRole
+  })
+}
+
+export function deleteByUserRole(userRole) {
+  return request({
+    url: '/admin/UserRole/deleteByUserRole',
+    method: 'post',
+    data: userRole
+  })
+}
+
+export function insertUserAddPermission(userAddPermission) {
+  return request({
+    url: '/admin/UserAddPermission/insertUserAddPermission',
+    method: 'post',
+    data: userAddPermission
+  })
+}
+
+export function deleteByUserAddPermission(userAddPermission) {
+  return request({
+    url: '/admin/UserAddPermission/deleteByUserAddPermission',
+    method: 'post',
+    data: userAddPermission
+  })
+}
