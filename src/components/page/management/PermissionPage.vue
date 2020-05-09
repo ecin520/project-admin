@@ -2,7 +2,7 @@
   <div class="permission">
     <el-card v-loading="loading">
       <div class="crud-permission">
-        <el-button size="small" type="success" @click="addPermissionClick"
+        <el-button size="small" type="success" @click="additionalPermissionClick"
           >添加权限</el-button
         >
         <el-button size="small" type="primary" @click="init">刷新</el-button>
@@ -106,7 +106,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="添加权限" :visible.sync="addPermissionDialog" width="650px">
+    <el-dialog title="添加权限" :visible.sync="additionalPermissionDialog" width="650px">
       <el-form
         :model="insertPermission"
         size="small"
@@ -122,10 +122,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button size="small" type="default" @click="addPermissionDialog = false">
+        <el-button size="small" type="default" @click="additionalPermissionDialog = false">
           取消
         </el-button>
-        <el-button size="small" type="success" @click="addPermissionConfirmClick">
+        <el-button size="small" type="success" @click="additionalPermissionConfirmClick">
           添加
         </el-button>
       </div>
@@ -148,7 +148,7 @@ export default {
       permissionDetail: {},
       insertPermission: {},
       loading: true,
-      addPermissionDialog: false,
+      additionalPermissionDialog: false,
       permissionDetailDialog: false,
       total: 7,
       currentPage: 1,
@@ -166,13 +166,13 @@ export default {
         this.init();
       });
     },
-    addPermissionClick() {
-      this.addPermissionDialog = true;
+    additionalPermissionClick() {
+      this.additionalPermissionDialog = true;
     },
-    addPermissionConfirmClick() {
+    additionalPermissionConfirmClick() {
       insertPermission(this.insertPermission).then(response => {
         this.$message({ message: response.message, type: "success" });
-        this.addPermissionDialog = false;
+        this.additionalPermissionDialog = false;
         this.insertPermission = {};
         this.init();
       });

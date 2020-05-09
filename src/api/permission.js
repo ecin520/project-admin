@@ -1,8 +1,8 @@
 import request from '../utils/request'
 
-export function listAllAddPermissions() {
+export function listAllAdditionalPermissions() {
   return request({
-    url: '/admin/AddPermission/listAllAddPermissions',
+    url: '/admin/AdditionalPermission/listAllAdditionalPermissions',
     method: 'get'
   })
 }
@@ -44,7 +44,7 @@ export function countPermission() {
 export function deleteByPermissionId(id) {
   return request({
     url: '/admin/Permission/deleteByPermissionId',
-    method: 'post',
+    method: 'get',
     params: {id}
   })
 }

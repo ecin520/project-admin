@@ -37,7 +37,7 @@ export function countRole() {
 export function deleteByRoleId(id) {
   return request({
     url: '/admin/Role/deleteByRoleId',
-    method: 'post',
+    method: 'get',
     params: {id}
   })
 }
@@ -50,10 +50,10 @@ export function insertRolePermission(rolePermission) {
   })
 }
 
-export function deleteByRolePermission(rolePermission) {
+export function deleteByRoleAndPermissionId(roleId, permissionId) {
   return request({
-    url: '/admin/RolePermission/deleteByRolePermission',
-    method: 'post',
-    data: rolePermission
+    url: '/admin/RolePermission/deleteByRoleAndPermissionId',
+    method: 'get',
+    params: {roleId, permissionId}
   })
 }

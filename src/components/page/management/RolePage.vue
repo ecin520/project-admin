@@ -159,7 +159,7 @@ import {
 } from "@/api/role";
 import { listRolePermissions } from "@/api/admin";
 import { listAllPermissions } from "@/api/permission";
-import { deleteByRolePermission, insertRolePermission } from "@/api/role";
+import { deleteByRoleAndPermissionId, insertRolePermission } from "@/api/role";
 export default {
   data() {
     return {
@@ -269,10 +269,7 @@ export default {
           });
         });
         sub.forEach(element => {
-          deleteByRolePermission({
-            roleId: this.roleDetail.id,
-            permissionId: this.permissionMap.get(element)
-          }).then(response => {
+          deleteByRoleAndPermissionId(this.roleDetail.id, this.permissionMap.get(element)).then(response => {
             console.log(response);
           });
         });

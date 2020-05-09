@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 import Router from 'vue-router'
 import ElementUI from 'element-ui';
+import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './store'
 import VCharts from 'v-charts'
@@ -15,6 +16,7 @@ Router.prototype.push = function push (to) {
     return VueRouterPush.call(this, to).catch(err => err)
 }
 
+Vue.prototype.$axios = axios;
 Vue.use(VueHighlightJS)
 Vue.config.productionTip = false
 Vue.use(ElementUI)

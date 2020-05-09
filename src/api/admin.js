@@ -3,15 +3,15 @@ import request from '../utils/request'
 export function listAllRolesById(id) {
   return request({
     url: '/admin/listAllRoles',
-    method: 'post',
+    method: 'get',
     params: {id}
   })
 }
 
-export function listAllAddPermissionsById(id) {
+export function listAllAdditionalPermissionsById(id) {
   return request({
-    url: '/admin/listUserAddPermissions',
-    method: 'post',
+    url: '/admin/listUserAdditionalPermissions',
+    method: 'get',
     params: {id}
   })
 }
@@ -19,7 +19,7 @@ export function listAllAddPermissionsById(id) {
 export function listRolePermissions(id) {
   return request({
     url: '/admin/listRolePermissions',
-    method: 'post',
+    method: 'get',
     params: {id}
   })
 }

@@ -37,7 +37,7 @@ export function countUser() {
 export function deleteByUserId(id) {
   return request({
     url: '/admin/User/deleteByUserId',
-    method: 'post',
+    method: 'get',
     params: {id}
   })
 }
@@ -50,26 +50,28 @@ export function insertUserRole(userRole) {
   })
 }
 
-export function deleteByUserRole(userRole) {
+export function deleteByUserAndRoleId(userId, roleId) {
   return request({
-    url: '/admin/UserRole/deleteByUserRole',
-    method: 'post',
-    data: userRole
+    url: '/admin/UserRole/deleteByUserAndRoleId',
+    method: 'get',
+    params: {userId, roleId}
   })
 }
 
-export function insertUserAddPermission(userAddPermission) {
+export function insertUserAdditionalPermission(userAdditionalPermission) {
   return request({
-    url: '/admin/UserAddPermission/insertUserAddPermission',
+    url: '/admin/UserAdditionalPermission/insertUserAdditionalPermission',
     method: 'post',
-    data: userAddPermission
+    data: userAdditionalPermission
   })
 }
 
-export function deleteByUserAddPermission(userAddPermission) {
+export function deleteByUserAndAdditionalPermissionId(userId, additionalPermissionId) {
   return request({
-    url: '/admin/UserAddPermission/deleteByUserAddPermission',
-    method: 'post',
-    data: userAddPermission
+    url: '/admin/UserAdditionalPermission/deleteByUserAndAdditionalPermissionId',
+    method: 'get',
+    params: {
+      userId, additionalPermissionId
+    }
   })
 }

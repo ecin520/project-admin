@@ -1,51 +1,30 @@
 <template>
-  <div class="login">
-    <el-card class="login-card">
-      <p class="login-title">软件项目管理系统后台</p>
-      <el-input
-        class="login-item"
-        prefix-icon="el-icon-user"
-        placeholder="username"
-        v-model="username"
-      ></el-input>
-      <el-input
-        show-password
-        class="login-item"
-        prefix-icon="el-icon-lock"
-        placeholder="password"
-        v-model="password"
-      ></el-input>
-      <span>
-        <el-col :span="12">
-          <el-input
-            maxlength="5"
-            placeholder="请输入右侧验证码"
-            class="login-item"
-            v-model="code"
-          ></el-input>
-        </el-col>
-        <el-col :span="12">
-          <img
-            @click="refresh"
-            :src="codeUrl"
-            class="login-item check-code"
-          />
-        </el-col>
-      </span>
-      <el-button
-        v-loading="loading"
-        class="login-item"
-        type="primary"
-        @click="loginClick"
-        >登录</el-button
-      >
-    </el-card>
-  </div>
+<div class="login">
+  <el-card class="login-card">
+    <p class="login-title">软件项目管理系统后台</p>
+    <el-input class="login-item" prefix-icon="el-icon-user" placeholder="username" v-model="username"></el-input>
+    <el-input show-password class="login-item" prefix-icon="el-icon-lock" placeholder="password" v-model="password"></el-input>
+    <span>
+      <el-col :span="12">
+        <el-input maxlength="5" placeholder="请输入右侧验证码" class="login-item" v-model="code"></el-input>
+      </el-col>
+      <el-col :span="12">
+        <img @click="refresh" :src="codeUrl" class="login-item check-code" />
+      </el-col>
+    </span>
+    <el-button v-loading="loading" class="login-item" type="primary" @click="loginClick">登录</el-button>
+  </el-card>
+</div>
 </template>
 
 <script>
-import { login, register } from "@/api/basic";
-import { createImageCode } from "@/api/common";
+import {
+  login,
+  register
+} from "@/api/basic";
+import {
+  createImageCode
+} from "@/api/common";
 export default {
   data() {
     return {
@@ -59,13 +38,16 @@ export default {
   },
   methods: {
     refresh() {
-      this.codeUrl = '/api/common/createImageCode?d='+new Date()*1
+      this.codeUrl = '/api/common/createImageCode?d=' + new Date() * 1
     },
     loginClick() {
       this.loading = true;
 
       if (this.username === "" || this.password === "") {
-        this.$message({ message: "请输入正确格式", type: "error" });
+        this.$message({
+          message: "请输入正确格式",
+          type: "error"
+        });
         this.loading = false;
         return;
       }
@@ -73,13 +55,18 @@ export default {
       login(this.username, this.password, this.code)
         .then(response => {
           if (response.code === 200) {
-            this.$message({ message: "登陆成功", type: "success" });
+            this.$message({
+              message: "登陆成功",
+              type: "success"
+            });
             this.$store.dispatch("login", {
-              token: response.message,
+              token: response.token,
               userInfo: response.user
             });
             this.loading = false;
-            this.$router.push({ path: "/" });
+            this.$router.push({
+              path: "/"
+            });
           }
         })
         .catch(error => {
@@ -113,24 +100,26 @@ export default {
   justify-content: center;
   padding-top: 170px;
   background-color: #1fc8db;
-  background-image: linear-gradient(
-    141deg,
-    #e8f0ec 0%,
-    #c0dadd 51%,
-    #a5d4e6 75%
-  );
+  background-image: linear-gradient(141deg,
+      #e8f0ec 0%,
+      #c0dadd 51%,
+      #a5d4e6 75%);
   // background: url("https://cloud.qqshabi.cn/api/images/api.php");
-  background: url("https://api.ixiaowai.cn/api/api.php");
+  // background: url("https://api.ixiaowai.cn/api/api.php");
   // background: url("http://www.dmoe.cc/random.php");
   // background: url('https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture');
   width: 100%;
   height: 100%;
+  background-position: center center;
+  background-size: cover;
+  background-color: rgba(41, 50, 39, 1);
 
   .login-card {
     padding: 10px;
     width: 400px;
     height: 350px;
     border: none;
+    background: transparent;
     box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.5);
 
     .login-title {

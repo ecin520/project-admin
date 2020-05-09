@@ -63,7 +63,7 @@
     <el-dialog
       title="异常详情"
       :lock-scroll="true"
-      top="20px"
+      top="30px"
       width="800px"
       :visible.sync="resultDetailDialog"
     >
